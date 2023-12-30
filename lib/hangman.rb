@@ -12,7 +12,7 @@ module Hangman
         game = Game.new
         game.new_game
       elsif option == 2
-        game = Game.load_game("game.bin")
+        game = Game.load_game
         game.play_game
       end
     end
@@ -46,7 +46,7 @@ module Hangman
     end
 
     # Loads a game from a file
-    def self.load_game(path)
+    def self.load_game(path = 'game.bin')
       unless File.exist?(path)
         puts "Error: File #{path} not found."
         return nil
