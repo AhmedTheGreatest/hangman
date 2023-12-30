@@ -12,12 +12,31 @@ module Hangman
         game = Game.new
         game.new_game
       elsif option == 2
-        game = Game.load_game
-        game.play_game
+        load
       end
     end
 
     private
+
+    def load
+      games = Dir.entries('games')[0..-3]
+      display_load_options(games)
+      file_path = file_to_load(games)
+      game = Game.load_game(file_path)
+      game.play_game
+    end
+
+    def display_load_options(games)
+      puts 'Which game do you want to open?'.bold.red
+      games.each_with_index do |game, index|
+        puts "#{"[#{index + 1}]".bold.cyan} #{game.bold.cyan}"
+      end
+    end
+
+    def file_to_load(games)
+      option = gets.chomp.to_i - 1
+      "games/#{games[option]}"
+    end
 
     def display_start_options
       puts 'Do you want to:'.bold.red
@@ -46,19 +65,19 @@ module Hangman
     end
 
     # Loads a game from a file
-    def self.load_game(path = 'game.bin')
+    def self.load_game(path)
       unless File.exist?(path)
         puts "Error: File #{path} not found."
         return nil
       end
 
-      File.open(path, "r") do |file|
+      File.open(path, 'r') do |file|
         Marshal.load(file.read)
       end
     end
 
+    # Plays a game
     def play_game
-      # Play a game
       loop do
         break if game_over?
 
@@ -72,7 +91,9 @@ module Hangman
 
     # Saves a game into a file
     def save_game
-      File.open("game.bin", "w") do |file|
+      Dir.mkdir('games') unless Dir.exist?('games')
+
+      File.open(available_file_name, 'w') do |file|
         file.write(Marshal.dump(self))
       end
     end
@@ -84,6 +105,16 @@ module Hangman
         puts 'You have lost the game!'
         puts "The correct word was #{@correct_word.join('')}"
       end
+    end
+
+    def available_file_name
+      counter = 0
+      loop do
+        break unless File.exist?("games/game#{counter}.bin")
+
+        counter += 1
+      end
+      "games/game#{counter}.bin"
     end
 
     def game_over?
