@@ -2,6 +2,8 @@
 
 This is a simple clone of the popular game - Hangman implemented in Ruby.
 
+[![Run on Repl.it](https://replit.com/badge/github/AhmedTheGreatest/hangman)](https://replit.com/new/github/AhmedTheGreatest/hangman)
+
 ## Installation
 
 Run the following commands in your terminal:
