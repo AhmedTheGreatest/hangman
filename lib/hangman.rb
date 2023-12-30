@@ -24,10 +24,20 @@ module Hangman
     def play_game
       # Play a game
       loop do
+        break if game_over?
+
         display_game
         make_guess
+      end
+      display_game_end_msg
+    end
 
-        break if game_over?
+    def display_game_end_msg
+      if game_won?
+        puts 'You have won the game!'
+      elsif game_lost?
+        puts 'You have lost the game!'
+        puts "The correct word was #{@correct_word.join('')}"
       end
     end
 
@@ -56,7 +66,13 @@ module Hangman
     end
 
     def ask_for_guess
-      gets.chomp[0].downcase
+      print 'Type your guess: '
+      guess = ''
+      loop do
+        guess = gets.chomp
+        break unless guess.empty?
+      end
+      guess[0].downcase
     end
 
     def display_game
