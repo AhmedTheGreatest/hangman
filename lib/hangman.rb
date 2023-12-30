@@ -45,8 +45,13 @@ module Hangman
       play_game
     end
 
+    # Loads a game from a file
     def self.load_game(path)
-      # Loads a game from a file
+      unless File.exist?(path)
+        puts "Error: File #{path} not found."
+        return nil
+      end
+
       File.open(path, "r") do |file|
         Marshal.load(file.read)
       end
